@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Valery Vitkus</title>
+    <style>
+        .tabs {
+            position: relative;
+            margin-top: 40px;
+            padding: 2rem;
+            border: 2px solid black;
+        }
+
+        .tab {
+            display: none;
+        }
+
+        .tab-active {
+            display: block;
+        }
+
+        .tabs-controls {
+            position: absolute;
+            top: -34px;
+            left: 40px;
+            z-index: 100;
+        }
+
+        .tab-control {
+            position: relative;
+            display: inline-block;
+            height: 30px;
+            min-width: 50px;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            padding: 0 .5rem;
+            vertical-align: middle;
+            cursor: pointer;
+            user-select: none;
+            width: 100px;
+        }
+
+        .tab-control::before {
+            content: '';
+            box-sizing: border-box;
+            height: 31px;
+            position: absolute;
+            top: 3px;
+            right: -1px;
+            bottom: 0;
+            background-color: lightgray;
+            left: 0;
+            z-index: -1;
+            border: 2px solid black;
+            transform: scale(1.2, 1.3) perspective(.5em) rotateX(3deg);
+            transform-origin: bottom left;
+        }
+
+        .tab-control.tab-control-active::before {
+            background-color: white;
+            border-width: 2px 2px 0 2px;
+        }
+
+        .tab-control-active {
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="tabs">
+
+    <div class="tabs-controls">
+        <span class="tab-control tab-control-active" data-open-tab-id="1" onclick="openTab(event);">First</span>
+        <span class="tab-control" data-open-tab-id="2" onclick="openTab(event);">Second</span>
+    </div>
+
+    <div class="tab" data-tab-id="1">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Suspendisse nec egestas massa, a ornare nulla.
+            Sed condimentum placerat sem non vestibulum.
+            Phasellus ut velit nunc. Nunc tristique ac quam sit amet pulvinar.
+            Donec fringilla leo vitae mollis lacinia. In magna dui, finibus a consequat non, porttitor eu nisl.
+            Pellentesque rutrum nunc felis, sed sagittis sapien ullamcorper sit amet. Vestibulum non accumsan eros.
+            Ut dictum facilisis sagittis.</p>
+    </div>
+    <div class="tab" data-tab-id="2">
+        <p>
+            Aenean eget pretium erat. Pellentesque bibendum orci sit amet turpis hendrerit, a aliquet justo porttitor.
+            Pellentesque nec nibh odio. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac
+            turpis egestas.
+            In sollicitudin, ex vitae feugiat commodo, massa lacus molestie tellus, id finibus dolor orci congue dui.
+            Maecenas semper risus eu aliquet accumsan.
+            Sed aliquam, tellus sed pharetra suscipit, elit erat rhoncus sapien, vel blandit neque neque eu nisl.
+        </p>
+    </div>
+</div>
+<script>
+
+    window.onload = function () {
+        if (localStorage.getItem("activeTabId") === null) {
+            showActiveTab("1");
+        } else {
+            showActiveTab(localStorage.getItem("activeTabId"));
+        }
+    };
+
+    function openTab(event) {
+        const selectedTabId = event.currentTarget.dataset.openTabId;
+        showActiveTab(selectedTabId);
+        saveActiveTabToLocalStorage(selectedTabId);
+    }
+
+    function showActiveTab(selectedTabId) {
+        const tabs = document.getElementsByClassName("tab");
+        for (let i = 0; i < tabs.length; i++) {
+            tabs[i].classList.remove("tab-active");
+        }
+
+        for (let i = 0; i < tabs.length; i++) {
+            if (tabs[i].dataset.tabId === selectedTabId) {
+                tabs[i].classList.add("tab-active");
+            }
+        }
+        setActiveTabsControl(selectedTabId);
+    }
+
+    function setActiveTabsControl(selectedControlId) {
+        const tabsControls = document.getElementsByClassName("tab-control");
+        for (let i = 0; i < tabsControls.length; i++) {
+            tabsControls[i].classList.remove("tab-control-active");
+        }
+        for (let i = 0; i < tabsControls.length; i++) {
+            if (tabsControls[i].dataset.openTabId === selectedControlId) {
+                tabsControls[i].classList.add("tab-control-active");
+            }
+        }
+    }
+
+    function saveActiveTabToLocalStorage(tabId) {
+        localStorage.setItem("activeTabId", tabId);
+    }
+
+</script>
+</body>
+</html>
